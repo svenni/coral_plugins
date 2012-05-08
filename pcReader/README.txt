@@ -1,0 +1,1 @@
+This is a python version of the pc2 reader. NOTE: this plugin does not work with the coral source found on http://code.google.com/p/coral-repo/ (at least not today, May 8th 2012). This needs to expose one function to python that isn't. (setVec3Values in numericNodesWrapper.h). So odds are this doesn't work with your coral. At least not yet.
