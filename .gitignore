@@ -1,0 +1,7 @@
+.DS_Store
+.sconsign.dblite
+debug/*
+*.pyc
+*.so
+build.sh
+buildEnv.py

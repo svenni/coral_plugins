@@ -1,0 +1,4 @@
+
+import coralBuilder
+
+module = coralBuilder.buildModule("PC2Importer", ["PC2Importer.cpp"])
