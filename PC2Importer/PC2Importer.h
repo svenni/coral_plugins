@@ -1,11 +1,12 @@
 #ifndef PC2IMPOERTERNODE_H
 #define PC2IMPOERTERNODE_H
 
-#include "../coral-repo/coral/coral/src/Node.h"
+#include "../../coral-repo/coral/coral/src/Node.h"
 
 namespace coral{
 	class StringAttribute;
 	class NumericAttribute;
+	class BoolAttribute;
 	
 struct pc2Header{
 	char signature[12];
@@ -38,12 +39,12 @@ private:
 	StringAttribute *_filename;
 	NumericAttribute *_frame;
 	NumericAttribute *_points;
+	BoolAttribute *_keep;
+	pc2Header *header;
+	float *a_point[3];
 	
 };
 }
-
-int ntohi( const int  );
-float ntohf( const float  );
 
 
 #endif
