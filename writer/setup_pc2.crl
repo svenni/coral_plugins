@@ -1,0 +1,69 @@
+# coral save script
+version = 0.1
+
+def runScript(topNode = 'root'):
+    executeCommand('CreateNode', className = 'GeoCube', name = 'GeoCube', specializationPreset = 'none', parentNode = topNode)
+    executeCommand('SetAttributeValue', attribute = topNode + '.GeoCube.width', value = '[15] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.GeoCube.height', value = '[20] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.GeoCube.depth', value = '[10] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.GeoCube.widthSubdivisions', value = '[3] 1')
+    executeCommand('SetAttributeValue', attribute = topNode + '.GeoCube.heightSubdivisions', value = '[3] 1')
+    executeCommand('SetAttributeValue', attribute = topNode + '.GeoCube.depthSubdivisions', value = '[3] 1')
+    
+    executeCommand('CreateNode', className = 'DrawGeo', name = 'DrawGeo', specializationPreset = 'none', parentNode = topNode)
+    executeCommand('SetAttributeValue', attribute = topNode + '.DrawGeo.smooth', value = 'True')
+    executeCommand('SetAttributeValue', attribute = topNode + '.DrawGeo.flat', value = 'False')
+    executeCommand('SetAttributeValue', attribute = topNode + '.DrawGeo.wireframe', value = 'False')
+    executeCommand('SetAttributeValue', attribute = topNode + '.DrawGeo.points', value = 'False')
+    executeCommand('SetAttributeValue', attribute = topNode + '.DrawGeo.normals', value = 'False')
+    
+    executeCommand('CreateNode', className = 'GetGeoPoints', name = 'GetGeoPoints', specializationPreset = 'none', parentNode = topNode)
+    
+    executeCommand('CreateNode', className = 'Add', name = 'Add', specializationPreset = 'none', parentNode = topNode)
+    
+    executeCommand('CreateNode', className = 'Vec3', name = 'Vec3', specializationPreset = 'single', parentNode = topNode)
+    executeCommand('SetAttributeValue', attribute = topNode + '.Vec3.x', value = '[1] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.Vec3.z', value = '[1] 3')
+    
+    executeCommand('CreateNode', className = 'SetGeoPoints', name = 'SetGeoPoints', specializationPreset = 'none', parentNode = topNode)
+    
+    executeCommand('CreateNode', className = 'ArraySize', name = 'ArraySize', specializationPreset = 'none', parentNode = topNode)
+    
+    executeCommand('CreateNode', className = 'ConstantArray', name = 'ConstantArray', specializationPreset = 'none', parentNode = topNode)
+    
+    executeCommand('CreateNode', className = 'Time', name = 'Time', specializationPreset = 'none', parentNode = topNode)
+    executeCommand('SetAttributeValue', attribute = topNode + '.Time.framesPerSecond', value = '[24] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.Time.time', value = '[0] 3')
+    
+    executeCommand('CreateNode', className = 'WriteNode', name = 'WriteNode', specializationPreset = 'none', parentNode = topNode)
+    executeCommand('SetAttributeValue', attribute = topNode + '.WriteNode.filename', value = '/users/sjt/desktop/output.pc2')
+    executeCommand('SetAttributeValue', attribute = topNode + '.WriteNode.format', value = '[{0:"pc2",1:"ascii",},0]')
+    executeCommand('SetAttributeValue', attribute = topNode + '.WriteNode.frame', value = '[0] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.WriteNode.startFrame', value = '[0] 3')
+    executeCommand('SetAttributeValue', attribute = topNode + '.WriteNode.endFrame', value = '[30] 3')
+    
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.SetGeoPoints.outGeo', destinationAttribute = topNode + '.DrawGeo.geo')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.GeoCube.out', destinationAttribute = topNode + '.GetGeoPoints.geo')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.ConstantArray.array', destinationAttribute = topNode + '.Add.in0')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.GetGeoPoints.points', destinationAttribute = topNode + '.Add.in1')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.Time.time', destinationAttribute = topNode + '.Vec3.y')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.GeoCube.out', destinationAttribute = topNode + '.SetGeoPoints.inGeo')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.Add.out', destinationAttribute = topNode + '.SetGeoPoints.points')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.GetGeoPoints.points', destinationAttribute = topNode + '.ArraySize.array')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.ArraySize.size', destinationAttribute = topNode + '.ConstantArray.size')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.Vec3.vector', destinationAttribute = topNode + '.ConstantArray.constant')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.Add.out', destinationAttribute = topNode + '.WriteNode.points')
+    executeCommand('ConnectAttributes', sourceAttribute = topNode + '.Time.time', destinationAttribute = topNode + '.WriteNode.data')
+    # nodeEditor save data
+    executeCommand('SetNodeUiData', node = topNode, data = {})
+    executeCommand('SetNodeUiData', node = topNode + '.GeoCube', data = {'pos': [-502.24999999999994, -207.49999999999997]})
+    executeCommand('SetNodeUiData', node = topNode + '.DrawGeo', data = {'pos': [399.00000000000006, -67.0]})
+    executeCommand('SetNodeUiData', node = topNode + '.GetGeoPoints', data = {'pos': [-421.25000000000017, 63.750000000000043]})
+    executeCommand('SetNodeUiData', node = topNode + '.Add', data = {'pos': [112.50000000000004, 51.250000000000014]})
+    executeCommand('SetNodeUiData', node = topNode + '.Vec3', data = {'pos': [-188.75000000000009, -42.499999999999986]})
+    executeCommand('SetNodeUiData', node = topNode + '.SetGeoPoints', data = {'pos': [232.50000000000006, 22.499999999999986]})
+    executeCommand('SetNodeUiData', node = topNode + '.ArraySize', data = {'pos': [-202.50000000000006, -168.75000000000003]})
+    executeCommand('SetNodeUiData', node = topNode + '.ConstantArray', data = {'pos': [-58.750000000000014, -55.0]})
+    executeCommand('SetNodeUiData', node = topNode + '.Time', data = {'pos': [-378.75000000000011, 192.50000000000003]})
+    executeCommand('SetNodeUiData', node = topNode + '.WriteNode', data = {'pos': [405.00000000000006, 203.75000000000009]})
+    

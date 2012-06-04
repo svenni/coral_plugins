@@ -50,7 +50,6 @@ class WriteNode(Node):
         if time_node.className() != 'Time':
             raise RuntimeError('Input of \'frame\' is not a Time node.')
         time_attr = time_node.findAttribute('time')
-        print dir(time_attr)
         
         # check the output path and range attrs
         output_path = self._path.value().stringValue()
@@ -73,8 +72,27 @@ class WriteNode(Node):
             
         selected_format = self._format.value().entries()[self._format.value().currentIndex()]
         if selected_format == 'pc2':
-            # write out pc2 data
-            pass
+            # I learned how to write pc 2 caches in python from Matt Ebb's script for blender:http://mattebb.com/projects/bpython/pointcache/export_pc2.py
+            import struct
+            if self._points.input() is not None:
+                num_points = len(self._points.value().vec3Values())
+                sample_rate = 1.0 # TODO:support various sample rates?
+                num_samples = int(end_frame) - int(start_frame)
+                
+                pc2_path = os.path.splitext(output_path)[0] + '.pc2'
+                f = open(pc2_path, 'wt')
+                header = struct.pack('<12ciiffi', 'P','O','I','N','T','C','A','C','H','E','2','\0', 1, num_points, int(start_frame), sample_rate, num_samples)
+                f.write(header)
+                for i in range(int(start_frame), int(end_frame+1)):
+                    time_attr.value().setFloatValueAt(0,i)
+                    time_attr.forceDirty()
+                    for p in self._points.value().vec3Values():
+                        point = struct.pack('<fff', p.x, p.y, p.z)
+                        f.write(point)
+                f.flush()
+                f.close()
+            else:
+                raise RuntimeError('No data to write!')
         elif selected_format == 'ascii':
             f = open(output_path, 'wt')
             
@@ -83,7 +101,6 @@ class WriteNode(Node):
             much of a slowdown. With 100000 frames (the points array was 10 elements) I got these write times:
             points: 14.098s (loop inside input check) vs 14.34s (check inside loop)
             float: 4.036 (loop inside input check) vs 4.55 (check inside loop)
-            
             '''
             for i in range(int(start_frame), int(end_frame+1)):
                 time_attr.value().setFloatValueAt(0,i)
@@ -99,6 +116,7 @@ class WriteNode(Node):
                 else:
                     f.close()
                     raise RuntimeError('No data to write!')
+                f.close()
         
         
 def loadPlugin():
